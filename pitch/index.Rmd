@@ -5,7 +5,7 @@ author      : Jay Lillico
 job         : 
 framework   : io2012
 highlighter : highlight.js
-hitheme     : tomorrow 
+hitheme     : zenburn
 widgets     : [] 
 mode        : selfcontained # {standalone, draft}
 knit        : slidify::knit2slides
@@ -24,7 +24,7 @@ Specifically we let the user:
 
 With this app, users can experiment with the number of calories they consume and see how this will shape their weight loss/gain.
 
---- .class #id 
+--- .class #id
 
 ```{r echo=FALSE}
 weight <- 65
@@ -59,7 +59,9 @@ where the activity level effect ranges from 1.2 to 1.9
 
 With the BMR and TDEE calculations made, our users can now quickly view their estimated weight loss/gains for their desired calorie consumption.  The table below is a sample of results.  Again, the user can change their calorie consumption and view the changes immediately.
 
-```{r,echo=FALSE,results='asis'}
+![alt table](assets/img/tdee.png)
+
+```{r,echo=FALSE}
 library(knitr)
 
 weight <- 65
@@ -78,7 +80,7 @@ for (i in 1:9) {
      tdee <- bmr * 1.2
      df <- rbind(df,data.frame(Week=i+1,kg=weight,lbs=weight*2.2,BMR=bmr,TDEE=tdee))
 }
-kable(df, format = "markdown")
+#kable(df, format = "markdown")
 ```
 
 Note that we show weight in both in kilograms and pounds to make it easier for the user.
