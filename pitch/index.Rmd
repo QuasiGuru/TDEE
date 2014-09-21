@@ -1,0 +1,97 @@
+---
+title       : Body Weight Planner
+subtitle    : Visualizing Calorie Consumption And Weight Loss/Gain
+author      : Jay Lillico
+job         : 
+framework   : io2012
+highlighter : highlight.js
+hitheme     : tomorrow 
+widgets     : [] 
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+logo        : scale.png     
+---
+
+## Body Weight Planner
+
+With the new emphasis on wearable activity monitors and nutritional habits, consumers are now more interested in how their eating habits affect their health.  With this app, we can make it easier to find out.
+
+Specifically we let the user:
+
+1. Calculate their Basic Metabolic Rate
+2. Calculate their Total Daily Energy Expenditure
+3. View their projected weight loss/gain for a given number of calories consumed.
+
+With this app, users can experiment with the number of calories they consume and see how this will shape their weight loss/gain.
+
+--- .class #id 
+
+```{r echo=FALSE}
+weight <- 65
+height <- 170
+age <- 30
+sex <- "male"
+week <- 1
+```
+
+## BMR/TDEE Parameters
+
+Basic Metabolic Rate (BMR) is the estimate of the number of calories a person would expend in a day if they were basically stationary.  This number is generally considered the minimum number of calories a person should consume in a day. The BMR calculation is: 
+
+```{r echo=TRUE}
+bmr <- 655 + (9.6 * weight) + (1.8 * height) - (4.7 * age) #Female
+bmr <- 66 + (13.7 * weight) + (5 * height) - (6.8 * age) #Male
+```
+
+We also convert the numbers entered by the user from kilograms to pounds for the user.
+
+Total Daily Energy Expenditure (TDEE) takes the given BMR number and an activity level to determine the number of calories a person expends daily.  A person's TDEE is the number of calories a person should consume to maintain their weight. The TDEE Calculation is:
+
+```{r echo=TRUE}
+tdee <- bmr * 1.2
+```
+
+where the activity level effect ranges from 1.2 to 1.9
+
+--- .class #id 
+
+## Weekly Progression
+
+With the BMR and TDEE calculations made, our users can now quickly view their estimated weight loss/gains for their desired calorie consumption.  The table below is a sample of results.  Again, the user can change their calorie consumption and view the changes immediately.
+
+```{r,echo=FALSE,results='asis'}
+library(knitr)
+
+weight <- 65
+height <- 170
+age <- 30
+sex <- "male"
+week <- 1
+bmr <- 66 + (13.7 * weight) + (5 * height) - (6.8 * age)
+tdee <- bmr * 1.2
+
+df <- data.frame(Week=week,kg=weight,lbs=weight*2.2,BMR=bmr,TDEE=tdee)
+
+for (i in 1:9) {
+     weight <- df$kg[i] - ((df$TDEE[i]  - 2000)*7)/ 7700
+     bmr <- 66 + (13.7 * weight) + (5 * height) - (6.8 * age)
+     tdee <- bmr * 1.2
+     df <- rbind(df,data.frame(Week=i+1,kg=weight,lbs=weight*2.2,BMR=bmr,TDEE=tdee))
+}
+kable(df, format = "markdown")
+```
+
+Note that we show weight in both in kilograms and pounds to make it easier for the user.
+
+--- .class #id 
+
+## Summary
+
+* This app gives users easy and quick ways to figure out important nutritional calculations
+* Immediate results are given to the users in a clear, easy to understand manner
+* Users can change numbers and get immediate feedback
+* We even give users a graph, just because everyone likes graphs.
+
+```{r,echo=FALSE,fig.height=4,fig.width=8}
+plot(df$Week,df$kg,type="l",main="Weight Loss/Gain Pattern", xlab="Week", ylab="Weight(kg)",col="red",lwd="2")
+```
